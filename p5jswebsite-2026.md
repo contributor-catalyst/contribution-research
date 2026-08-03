@@ -1,6 +1,6 @@
 ## The Issue
 - [Kendall] - What #432 asks for, in plain English
-- [Jaden] - Why it matters to the project: who does it serve and why is it an accessibility question?
+- [Jaden] - A downloadable reference ZIP matters because it makes p5.JS easily accessible for users who don't have reliable/consistent wifi or aren't able to access wifi at that time.
 - [Des] - Key files in the codebase, and what each does… for ex: src/scripts/builders/reference.ts, astro.config.mjs, src/globals/p5-version.ts, release-workflow-v2.yml
 - [Xavier] - Supporting artifacts, if relevant: error messages, console output, screenshots
  
