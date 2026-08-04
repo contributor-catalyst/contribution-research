@@ -1,6 +1,6 @@
 ## The Issue
 [Issue #432 ](https://github.com/processing/p5.js-website/issues/432), within the [p5.js-website](https://github.com/processing/p5.js-website) repo is asking for the implementation of a fully functional, updated downloadable reference ZIP of p5.JS that can be available for offline use. 
-A downloadable reference ZIP matters because it makes p5.JS easily accessible for users who don't have reliable/consistent wifi or aren't able to access wifi at that time.
+A downloadable reference ZIP matters because it makes p5.JS easily accessible for users who don't have reliable/consistent wifi or aren't able to access wifi at that time. For example, someone wanting to access p5.js on an airplane, or during a power outage.
 - [Des] - Key files in the codebase, and what each does… for ex: src/scripts/builders/reference.ts, astro.config.mjs, src/globals/p5-version.ts, release-workflow-v2.yml
 - [Xavier] - Supporting artifacts, if relevant: error messages, console output, screenshots
  
@@ -13,7 +13,7 @@ A downloadable reference ZIP matters because it makes p5.JS easily accessible fo
 ### _Where_ in the build process do we build the offline reference? (Team: JAA)
 - [Amario] - Restate each team’s scope of technical investigation, referring back to the previous diagram
 - [Name] - List all self-directed areas of investigation per team: this section is the point! It's the record of our extensive research and testing
-- [Jaden] - Using repository dispatch as the creation of the zip file is a dead end as it requires a PAT, but workflow dispatch is completely possible, and could still be explored further. With the research on how the ZIP file should be published, we concluded that workflow artifact is a dead end because there is a limit to how long the file will be present( the max is 90 days but can be adjusted to less). Two other routes that could still be explored are: publishing it as a release asset, and publishing it to its own storage space( e.g.,cloudflare). 
+- [Jaden] - Using repository dispatch as the creation of the zip file is a dead end as it requires a PAT. Another dead end we reached was publishing it as a workflow artifact because it expires after a while. Workflow dispatch can be explored further in the creation of the ZIP. For publishing, two routes could still be explored: publishing it as a release asset, and publishing it to its own storage space( e.g.,cloudflare). 
 - [Name] - Code snippets with plain-English explanation, where relevant
 ### _How_ do we build the offline reference? (Team: TeamFive)
 - [NIJEL C] - Our investigation focused on the packaging stage of the documentation pipeline. Rather than changing how the documentation is generated, we researched how the completed reference files could be packaged into a downloadable offline artifact while remaining separate from the existing build process.
