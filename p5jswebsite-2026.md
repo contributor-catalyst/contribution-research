@@ -13,7 +13,7 @@
 ### _Where_ in the build process do we build the offline reference? (Team: JAA)
 - [Amario] - Restate each team’s scope of technical investigation, referring back to the previous diagram
 - [Name] - List all self-directed areas of investigation per team: this section is the point! It's the record of our extensive research and testing
-- [Jaden] - Current status of each investigation (do you think it’s a dead end? or is it a promising direction to explore future?)
+- [Jaden] - Using repository dispatch as the creation of the zip file is a dead end as it requires a PAT, but workflow dispatch is completely possible, and could still be explored further. With the research on how the ZIP file should be published, we concluded that workflow artifact is a dead end because there is a limit to how long the file will be present( the max is 90 days but can be adjusted to less). Two other routes that could still be explored are: publishing it as a release asset, and publishing it to its own storage space( e.g.,cloudflare). 
 - [Name] - Code snippets with plain-English explanation, where relevant
 ### _How_ do we build the offline reference? (Team: TeamFive)
 - [NIJEL C] - Restate each team’s scope of technical investigation, referring back to the previous diagram
