@@ -11,7 +11,21 @@ Note: Despite these warnings and preprocessor errors, the build process complete
 
 ## Documentation Pipeline Overview
 - The pipeline begins with the p5.js source documentation, which is processed into structured files such as data.json and MDX reference pages. Astro then uses those generated files to build the static website, while GitHub Actions automates testing, builds, and deployment to keep the process consistent.
-- A system diagram: Docstrings → data.json → website build → dist/ → offline artifact, spanning both repos. Mark the three investigation tracks on it and number them so they are easy to refer back to
+- Diagram for New p5.js Release Process:
+```mermaid
+flowchart LR
+        A["New p5.js 2.x tag is released"]
+        A --> B["Release process begins"]
+        B --> C["Check that everything works:<br>-run tests<br>-run build"]
+        C --> D["Prepare release files:<br>-gather the files from the build process<br>-create a zip archive of the built p5.js files"]
+        D --> E["Release p5.js:<br>-create GitHub release<br>-publish package to NPM"]
+        E --> F{"Is this a prerelease?"}
+        F -- Yes --> G["Publish under beta tag in NPM"]
+        G --> I["Done"]
+        F -- No --> H["Clone the p5.js website"]
+        H --> J["Update p5.js website:<br>-rebuild website version and documentation pages<br>-commit updated website files<br>-push update to website repository"]
+        J --> K["Done"]
+```
 Let's say we wanted to change the documentation of the function `box()`. The end to end process of making a change in the offline reference page goes as follows: find the .js file in the p5.js repository that contains the data you want to change, in our case, the filepath `src/webgl/3d_primitives.js`. After you make your change, if you have npm installed, run `npm run docs` to update the `data.json` file that will be read by the p5.js-website repository. Commit the changes before you move over to the website repository, and with the repositories in the same location, run `npm run custom:dev ../p5.js#main` to connect the two. To generate the local reference, use `npm run build` and open the local host link it gives you when it's finished. This should pull up an offline version of the reference page, and from there, you just navigate to `box()` to check if your change went through.
 
 ## Investigation Tracks (three subsections / one per team)
