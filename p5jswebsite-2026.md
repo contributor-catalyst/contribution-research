@@ -28,13 +28,13 @@ flowchart LR
 ```
 Let's say we wanted to change the documentation of the function `box()`. The end to end process of making a change in the offline reference page goes as follows: find the .js file in the p5.js repository that contains the data you want to change, in our case, the filepath `src/webgl/3d_primitives.js`. After you make your change, if you have npm installed, run `npm run docs` to update the `data.json` file that will be read by the p5.js-website repository. Commit the changes before you move over to the website repository, and with the repositories in the same location, run `npm run custom:dev ../p5.js#main` to connect the two. To generate the local reference, use `npm run build` and open the local host link it gives you when it's finished. This should pull up an offline version of the reference page, and from there, you just navigate to `box()` to check if your change went through.
 
-## Investigation Tracks (three subsections / one per team)
-### _Where_ in the build process do we build the offline reference? (Team: JAA)
-JAA's scope of technical investigation is in the different workflows, actions, and artifacts that are used to generate different aspects of the project. We mainly used the *New p5.js 2.x release* workflow based in the *release-workflow-v2.yml* file that creates the version release notes, along with different tutorials about YAML files, as a reference and guide for our tests.  
+## Investigation Tracks
+### _Where_ in the build process do we build the offline reference?
+The scope of this technical investigation is in the different workflows, actions, and artifacts that are used to generate different aspects of the project. We mainly used the *New p5.js 2.x release* workflow based in the *release-workflow-v2.yml* file that creates the version release notes, along with different tutorials about YAML files, as a reference and guide for our tests.  
 We investigated multiple options for where the offline reference could be generated during the p5.js release process. We explored three options in particular. We explored a cross-repository workflow concept using repository_dispatch, where we would include a new step in the **release-workflow-v2.yml** file that would then trigger a new workflow in the p5.js-website repo that would then generate the offline reference. We then explored only editing the **release-workflow-v2.yml** file by including a new step that would either upload the offline reference as a workflow artifact or a release asset. 
 - Using repository dispatch as the creation of the zip file is a dead end as it requires a PAT. Another dead end we reached was publishing it as a workflow artifact because it expires after a while. Workflow dispatch can be explored further in the creation of the ZIP. For publishing, two routes could still be explored: publishing it as a release asset, and publishing it to its own storage space( e.g.,cloudflare). 
 - [Name] - Code snippets with plain-English explanation, where relevant
-### _How_ do we build the offline reference? (Team: TeamFive)
+### _How_ do we build the offline reference?
  - Our investigation focused on the packaging stage of the documentation pipeline. Rather than changing how the documentation is generated, we researched how the completed reference files could be packaged into a downloadable offline artifact while remaining separate from the existing build process.
 
 - Researched how the offline ZIP file currently works and where its process can be improved.
@@ -54,7 +54,7 @@ We investigated multiple options for where the offline reference could be genera
   ```python
   output_file.write_text(extracted_html, encoding="utf-8")
   ```
-### _What files_ should be in the offline reference? (Team: RawRattlers)
+### _What files_ should be in the offline reference?
 - Our approach to researching solutins for issue 432 was to review the oldest working version of the zipped, offline-downloadable reference file to help decide what needs to be in the offline reference doc. We spent time picking apart and experimenting with the old reference page, figuring out what made it work, which files were vital to the page's functionality, what was expendable, and why it had to be zipped.
 We focused on reverse-engineering the older offline reference ZIP, determining which files are essential to the functionality of the website. Testing which files are essential by removing assets and analyzing how search, examples, styling and navigation behave offline. Our team experimented with wget (a command‑line tool that downloads entire websites for offline use) as an alternative to Astro, compared file structures and sizes, while investigating link behavior and MDX portability. Our ongoing work includes prototyping a minimum offline reference.
 
