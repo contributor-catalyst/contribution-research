@@ -64,3 +64,5 @@ What we found so far shows that getting the reference to work offline is definit
   - modify the release workflow in p5.js to zip a folder (any folder) -> then: test automated upload of zip to an external storage website like cloudflare (is it possible?)
   - maybe: compress entire assets folder with FFMPEG (can this be done with a script? how could filenames be preserved for assets to load without modifying the html?)
   - maybe: implement bleach library for HTML sanitization (used to sanitize links in offline reference)
+
+Downloadable PDF of our research slides with additional information on our Issue #432 research: [PDF](https://export-download.canva.com/JUhGY/DAHRWRJUhGY/901/0-2333377588284187085.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQYCGKMUH5AO7UJ26%2F20260817%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260817T131431Z&X-Amz-Expires=9011&X-Amz-Signature=fa2294edfd1533daab5e354623775725cd3cc091f22e9105c775d1541d58f0f3&X-Amz-SignedHeaders=host%3Bx-amz-expected-bucket-owner&response-content-disposition=attachment%3B%20filename%2A%3DUTF-8%27%27CATALYST.pdf&response-expires=Mon%2C%2017%20Aug%202026%2015%3A44%3A42%20GMT)
