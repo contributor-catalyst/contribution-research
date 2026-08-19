@@ -32,10 +32,28 @@ Additional testing helped us better understand the documentation pipeline. We co
 
 ## Investigation Tracks
 ### _Where_ in the build process do we build the offline reference?
-The scope of this technical investigation is in the different workflows, actions, and artifacts that are used to generate different aspects of the project. We mainly used the *New p5.js 2.x release* workflow based in the *release-workflow-v2.yml* file that creates the version release notes, along with different tutorials about YAML files, as a reference and guide for our tests.  
-We investigated multiple options for where the offline reference could be generated during the p5.js release process. We explored three options in particular. We explored a cross-repository workflow concept using repository_dispatch, where we would include a new step in the **release-workflow-v2.yml** file that would then trigger a new workflow in the p5.js-website repo that would then generate the offline reference. We then explored only editing the **release-workflow-v2.yml** file by including a new step that would either upload the offline reference as a workflow artifact or a release asset. 
-- Using repository dispatch as the creation of the zip file is a dead end as it requires a PAT. Another dead end we reached was publishing it as a workflow artifact because it expires after a while. Workflow dispatch can be explored further in the creation of the ZIP. For publishing, two routes could still be explored: publishing it as a release asset, and publishing it to its own storage space( e.g.,cloudflare). 
-- [Name] - Code snippets with plain-English explanation, where relevant
+-  The scope of this technical investigation is in the different workflows, actions, and artifacts that are used to generate different aspects of the project. We mainly used the *New p5.js 2.x release* workflow based in the *release-workflow-v2.yml* file that creates the version release notes, along with different tutorials about YAML files, as a reference and guide for our tests.  
+-  We investigated multiple options for where the offline reference could be generated during the p5.js release process. We explored three options in particular. We explored a cross-repository workflow concept using repository_dispatch, where we would include a new step in the **release-workflow-v2.yml** file that would then trigger a new workflow in the p5.js-website repo that would then generate the offline reference. We then explored only editing the **release-workflow-v2.yml** file by including a new step that would either upload the offline reference as a workflow artifact or a release asset. 
+- Using repository dispatch as the creation of the zip file is a dead end as it requires a PAT. Another dead end we reached was publishing it as a workflow artifact because it expires after a while. Workflow dispatch can be explored further in the creation of the ZIP. For publishing, two routes could still be explored: publishing it as a release asset, and publishing it to its own storage space( e.g.,cloudflare).
+- Initial Experiment done by our team was using a 'dummy' folder of tutorial images from the public/images/tutorials/ directory and creating a workflow that zips the file as a workflow artifact. The workflow navigated to the directory using the working-depository keyword and the file was then zipped using command line zip command. The zip file was then uploaded as a workflow artifact using the upload-artifact GitHub action. 
+- Code Snippet:
+  Plan is to implement the new step for zipping the offline reference after the website is built in the **release-workflow-v2.yml** file. 
+  ```yaml
+  - name: Updated website files
+        if: ${{ steps.semver.outputs.is-prerelease != 'true' }}
+        run: |
+          cd website
+          npm install
+          npm run build:p5-version
+          npm run build:contributor-docs
+          npm run build:contributors
+          npm run build:reference
+          npm run build:search
+
+         ##(Add new step here)##
+
+  ```
+  
 ### _How_ do we build the offline reference?
  - Our investigation focused on the packaging stage of the documentation pipeline. Rather than changing how the documentation is generated, we researched how the completed reference files could be packaged into a downloadable offline artifact while remaining separate from the existing build process.
 
@@ -73,15 +91,19 @@ Code Snippets : wget --mirror --page-requisites --adjust-extension --convert-lin
 We considered integrating packaging directly into the documentation build process or keeping it as a separate step. We recommend a separate packaging stage because it is easier to maintain, test, and update without affecting the existing documentation generation pipeline, though it does require a prepared set of files before packaging can begin.
 
 ## Testing and verified findings:
-
 - Testing of the archived offline reference showed that reference pages, examples, and search could function without an internet connection, although some features behaved differently depending on the version of the offline reference being tested.
 - Removing search required removing five files but only reduced the reference size by approximately 2.8 MB. Because search is useful and removing it produced a relatively small reduction, larger media assets were identified as a better target for reducing the ZIP size.
 - Media compression was tested using five different methods with FFmpeg. Across 42 tested assets, the original files totaled approximately 6.40 MB. WebP produced the best overall result in this testing, reducing the files to approximately 1.42 MB, or about a 78% reduction.
 - Compression still introduces tradeoffs involving file formats, transparency, and compatibility, so these need to be considered before selecting a final compression method.
 
+## A few possible paths forward:
+  - modify the release workflow in p5.js to use wget on the reference section of the generated website
+  - modify the release workflow in p5.js to use beautiful soup on the reference section of the generated website
+  - modify the release workflow in p5.js to zip a folder (any folder) -> then: test automated upload of zip to an external storage website like cloudflare (is it possible?)
+  - maybe: compress entire assets folder with FFMPEG (can this be done with a script? how could filenames be preserved for assets to load without modifying the html?)
+  - maybe: implement bleach library for HTML sanitization (used to sanitize links in offline reference)
 
 ## Recommendations and next steps:
-
 - Prioritize maintaining a functional offline reference instead of removing useful features solely to reduce file size.
 - Keep essential assets and working internal links. External links that require internet access can remain but should be clearly identified as online links.
 - Search does not appear to be a major source of file size, so media compression should be prioritized before removing search.
@@ -90,3 +112,5 @@ We considered integrating packaging directly into the documentation build proces
 - Continue comparing generation and packaging methods, including Astro and wget, to determine the most stable long-term approach.
 - Determine where the completed ZIP should be hosted and how it can be automatically published as part of the release process.
 - Rather than selecting an arbitrary ZIP size limit, determine a reasonable target based on the smallest package that preserves the essential functionality of the offline reference.
+
+Downloadable PDF of our research slides with additional information on our Issue #432 research: [PDF](https://export-download.canva.com/JUhGY/DAHRWRJUhGY/901/0-2333377588284187085.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAQYCGKMUH5AO7UJ26%2F20260817%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20260817T131431Z&X-Amz-Expires=9011&X-Amz-Signature=fa2294edfd1533daab5e354623775725cd3cc091f22e9105c775d1541d58f0f3&X-Amz-SignedHeaders=host%3Bx-amz-expected-bucket-owner&response-content-disposition=attachment%3B%20filename%2A%3DUTF-8%27%27CATALYST.pdf&response-expires=Mon%2C%2017%20Aug%202026%2015%3A44%3A42%20GMT)
