@@ -30,10 +30,28 @@ Let's say we wanted to change the documentation of the function `box()`. The end
 
 ## Investigation Tracks
 ### _Where_ in the build process do we build the offline reference?
-The scope of this technical investigation is in the different workflows, actions, and artifacts that are used to generate different aspects of the project. We mainly used the *New p5.js 2.x release* workflow based in the *release-workflow-v2.yml* file that creates the version release notes, along with different tutorials about YAML files, as a reference and guide for our tests.  
-We investigated multiple options for where the offline reference could be generated during the p5.js release process. We explored three options in particular. We explored a cross-repository workflow concept using repository_dispatch, where we would include a new step in the **release-workflow-v2.yml** file that would then trigger a new workflow in the p5.js-website repo that would then generate the offline reference. We then explored only editing the **release-workflow-v2.yml** file by including a new step that would either upload the offline reference as a workflow artifact or a release asset. 
-- Using repository dispatch as the creation of the zip file is a dead end as it requires a PAT. Another dead end we reached was publishing it as a workflow artifact because it expires after a while. Workflow dispatch can be explored further in the creation of the ZIP. For publishing, two routes could still be explored: publishing it as a release asset, and publishing it to its own storage space( e.g.,cloudflare). 
-- [Name] - Code snippets with plain-English explanation, where relevant
+-  The scope of this technical investigation is in the different workflows, actions, and artifacts that are used to generate different aspects of the project. We mainly used the *New p5.js 2.x release* workflow based in the *release-workflow-v2.yml* file that creates the version release notes, along with different tutorials about YAML files, as a reference and guide for our tests.  
+-  We investigated multiple options for where the offline reference could be generated during the p5.js release process. We explored three options in particular. We explored a cross-repository workflow concept using repository_dispatch, where we would include a new step in the **release-workflow-v2.yml** file that would then trigger a new workflow in the p5.js-website repo that would then generate the offline reference. We then explored only editing the **release-workflow-v2.yml** file by including a new step that would either upload the offline reference as a workflow artifact or a release asset. 
+- Using repository dispatch as the creation of the zip file is a dead end as it requires a PAT. Another dead end we reached was publishing it as a workflow artifact because it expires after a while. Workflow dispatch can be explored further in the creation of the ZIP. For publishing, two routes could still be explored: publishing it as a release asset, and publishing it to its own storage space( e.g.,cloudflare).
+- Initial Experiment done by our team was using a 'dummy' folder of tutorial images from the public/images/tutorials/ directory and creating a workflow that zips the file as a workflow artifact. The workflow navigated to the directory using the working-depository keyword and the file was then zipped using command line zip command. The zip file was then uploaded as a workflow artifact using the upload-artifact GitHub action. 
+- Code Snippet:
+  Plan is to implement the new step for zipping the offline reference after the website is built in the **release-workflow-v2.yml** file. 
+  ```yaml
+  - name: Updated website files
+        if: ${{ steps.semver.outputs.is-prerelease != 'true' }}
+        run: |
+          cd website
+          npm install
+          npm run build:p5-version
+          npm run build:contributor-docs
+          npm run build:contributors
+          npm run build:reference
+          npm run build:search
+
+         ##(Add new step here)##
+
+  ```
+  
 ### _How_ do we build the offline reference?
  - Our investigation focused on the packaging stage of the documentation pipeline. Rather than changing how the documentation is generated, we researched how the completed reference files could be packaged into a downloadable offline artifact while remaining separate from the existing build process.
 
