@@ -85,7 +85,7 @@ We focused on reverse-engineering the older offline reference ZIP, determining w
 
 - What we found so far shows that getting the reference to work offline is definitely possible, but the wget version still has a few issues. @kameron-ctrl was able to open it and run the examples offline, but search still sends you back to the online reference. He also tested compressing small.mp4 from 383,631 bytes to 120,792 bytes and beat.mp3 from 254,118 bytes to 95,339 bytes. Since removing search barely changed the file size, we think it makes more sense to focus on the bigger media files instead of taking away a useful feature than possibly breaking something else.
 
-Code Snippets : wget --mirror --page-requisites --adjust-extension --convert-links --no-parent --execute robots=off --user-agent="Mozilla/5.0" http://p5js.org/reference/ This command downloads the full reference site—including all required assets—so our team can compare Astro’s build output with a fully scraped offline version
+Code Snippets : `wget --mirror --page-requisites --adjust-extension --convert-links --no-parent --execute robots=off --user-agent="Mozilla/5.0" http://p5js.org/reference/` This command downloads the full reference site—including all required assets—so our team can compare Astro’s build output with a fully scraped offline version
  
 ## Findings and recommendations
 We considered integrating packaging directly into the documentation build process or keeping it as a separate step. We recommend a separate packaging stage because it is easier to maintain, test, and update without affecting the existing documentation generation pipeline, though it does require a prepared set of files before packaging can begin.
