@@ -108,7 +108,11 @@ We focused on reverse-engineering the older offline reference ZIP, determining w
 
 - These results showed that media compression has potential for reducing the size of the offline reference, but the format used matters. Further testing would be needed to make sure compression does not negatively affect transparency, compatibility, or how assets are referenced by the offline pages.
 
-Code Snippets : wget --mirror --page-requisites --adjust-extension --convert-links --no-parent --execute robots=off --user-agent="Mozilla/5.0" http://p5js.org/reference/ This command downloads the full reference site—including all required assets—so our team can compare Astro’s build output with a fully scraped offline version
+Code Snippets :  
+```python 
+wget --mirror --page-requisites --adjust-extension --convert-links --no-parent --execute robots=off --user-agent="Mozilla/5.0" http://p5js.org/reference/
+```
+This command downloads the full reference site—including all required assets—so our team can compare Astro’s build output with a fully scraped offline version
  
 ## Findings and recommendations
 We considered integrating packaging directly into the documentation build process or keeping it as a separate step. We recommend a separate packaging stage because it is easier to maintain, test, and update without affecting the existing documentation generation pipeline, though it does require a prepared set of files before packaging can begin.
