@@ -100,7 +100,6 @@ We focused on reverse-engineering the older offline reference ZIP, determining w
 
 - What we found so far shows that getting the reference to work offline is definitely possible, but the wget version still has a few issues. @kameron-ctrl was able to open it and run the examples offline, but search still sends you back to the online reference. He also tested compressing small.mp4 from 383,631 bytes to 120,792 bytes and beat.mp3 from 254,118 bytes to 95,339 bytes. Since removing search barely changed the file size, we think it makes more sense to focus on the bigger media files instead of taking away a useful feature than possibly breaking something else.
 
-
 #### FFmpeg Media Compression Testing
 
 - To further explore the media compression mentioned above, we used FFmpeg to test five different compression methods across 42 assets. The original assets totaled approximately 6.40 MB, allowing us to compare how different formats affected both file size and functionality.
@@ -109,7 +108,11 @@ We focused on reverse-engineering the older offline reference ZIP, determining w
 
 - These results showed that media compression has potential for reducing the size of the offline reference, but the format used matters. Further testing would be needed to make sure compression does not negatively affect transparency, compatibility, or how assets are referenced by the offline pages.
 
-Code Snippets : `wget --mirror --page-requisites --adjust-extension --convert-links --no-parent --execute robots=off --user-agent="Mozilla/5.0" http://p5js.org/reference/` This command downloads the full reference site—including all required assets—so our team can compare Astro’s build output with a fully scraped offline version
+Code Snippets :  
+```python 
+wget --mirror --page-requisites --adjust-extension --convert-links --no-parent --execute robots=off --user-agent="Mozilla/5.0" http://p5js.org/reference/
+```
+This command downloads the full reference site—including all required assets—so our team can compare Astro’s build output with a fully scraped offline version
  
 ## Findings and recommendations
 We considered integrating packaging directly into the documentation build process or keeping it as a separate step. We recommend a separate packaging stage because it is easier to maintain, test, and update without affecting the existing documentation generation pipeline, though it does require a prepared set of files before packaging can begin.
